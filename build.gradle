@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 34
+    defaultConfig {
+        applicationId "com.example.onceagain"
+        minSdkVersion 24
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    namespace 'com.example.onceagain' // Remove this line or place it in the appropriate location
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false // Disable ProGuard for debug builds
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'src/main/AndroidManifest.xml'
+        }
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+// Read version catalog
+def versionsFile = file("versions.toml")
+def versions = [:]
+
+if (versionsFile.exists()) {
+    def toml = new groovy.json.JsonSlurper().parseText(org.apache.commons.io.FileUtils.readFileToString(versionsFile, "UTF-8"))
+    versions = toml.versions
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+    // implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin_stdlib}"
+    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin_stdlib}"
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+}
+
+ext {
+    kotlin_version = "1.9.20"
+}
